@@ -1,2 +1,5 @@
 *.mdb
 *.accdb
+*.docx
+*.xlsx
+*.pdf
