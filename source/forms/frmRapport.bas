@@ -370,7 +370,11 @@ On Error GoTo Err_GenerateReport
             stDocName = "rptEmneIkkePlanlagt"
             'Call Backlog    'lager backlog-tabell
     End Select
-    blnAktive = Me.chkAktive.Value
+    If IsNull(Me.chkAktive) Then
+        blnAktive = False
+    Else
+        blnAktive = Me.chkAktive.Value
+    End If
     
     'Semester
     Select Case Me.cboSem
@@ -408,6 +412,10 @@ On Error GoTo Err_GenerateReport
                 DoCmd.OpenReport stDocName, acViewPreview, WhereCondition:=stCriteria
         End Select
     Else
+        If IsNull(Me!lstEmner) Then
+            MsgBox "Du må velge en emnegruppe - eller alle", vbExclamation, OIS_Title
+            Exit Sub
+        End If
         Set myList = Me!lstEmner
         'Find selected subjects
         j = 0

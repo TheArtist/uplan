@@ -314,6 +314,10 @@ On Error GoTo Err_GenerateReport2
             stCriteria = "(" & strSem & ")"
         End If
     Else
+        If IsNull(Me!lstGrupper) Then
+            MsgBox "Du må velge en fagtilhørighet - eller alle", vbExclamation, OIS_Title
+            Exit Sub
+        End If
         Set myList = Me!lstGrupper
         strGruppe = myList.Column(1)
         intGruppe = myList.Column(0)
