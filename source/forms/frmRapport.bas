@@ -621,11 +621,6 @@ End Sub
 
 Public Sub GenerateExcel()
 On Error GoTo Err_GenerateExcel
-    Dim ExApp As Object
-    Dim ExBook As Excel.Workbook
-    Dim ExSheet As Excel.Worksheet
-    Dim ExRange As Range
-    Dim MyCol As Range
     Dim myDb As DAO.Database
     Dim emneRS As DAO.Recordset
     Dim leRS As DAO.Recordset
@@ -642,6 +637,26 @@ On Error GoTo Err_GenerateExcel
     Dim fagNavn(1 To 5) As String
     Dim C1 As String, C2 As String
 
+    ' Loading Excel (late or early)
+    ' 0 if Late Binding
+    ' 1 if Reference to Excel set.
+    #Const ExcelRef = 0
+    #If ExcelRef = 0 Then ' Late binding
+        Dim ExApp As Object
+        Dim ExBook As Object
+        Dim ExSheet As Object
+        Dim ExRange As Object
+        Set ExApp = CreateObject("Excel.Application")
+        On Error GoTo Err_GenerateExcel
+    #Else
+        ' a reference to MS Excel <version number> Object Library must be specified
+        Dim ExApp As Excel.Application
+        Dim ExBook As Excel.Workbook
+        Dim ExSheet As Excel.Worksheet
+        Dim ExRange As Range
+        Set ExApp = New Excel.Application
+    #End If
+    
     Set myDb = CurrentDb()
 
     sqlGruppe = "SELECT * FROM tblGruppe ORDER BY GruppeID;"
