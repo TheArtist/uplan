@@ -656,9 +656,10 @@ On Error GoTo Err_GenerateExcel
     fagRS.Close
     
     Set ExBook = ExApp.Workbooks.Add
-'Add two more worksheets
-    ExBook.Sheets.Add   'sheet no 4
-    ExBook.Sheets.Add   'sheet no 5
+    'Ensure that we have 5 sheets (one for each course group)
+    Do While ExBook.Sheets.Count < 5
+        ExBook.Sheets.Add
+    Loop
     sheetNo = 1
     Do While sheetNo <= 5
         Set ExSheet = ExBook.Sheets(sheetNo)
