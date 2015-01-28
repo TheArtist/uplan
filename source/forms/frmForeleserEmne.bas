@@ -2090,13 +2090,27 @@ On Error GoTo Err_btnArbeidsplan_Click
     Dim strSheet As String, strAgrp1 As String, strAgrp2 As String
     Dim strSem1 As String, strSem2 As String
     'Set MylvwEmne = lvwKurs.Object
-    Dim ExApp As Object
-    Dim APlan As Excel.Worksheet
     Dim APath As String, AFile As String, TFile As String
     Dim strNavn As String, strStilling As String
     Dim CellNo As String
     Dim AntKurs As Integer, i As Integer
     
+    ' Loading Excel (late or early)
+    ' 0 if Late Binding
+    ' 1 if Reference to Excel set.
+    #Const ExcelRef = 0
+    #If ExcelRef = 0 Then ' Late binding
+        Dim ExApp As Object
+        Dim APlan As Object
+        Set ExApp = CreateObject("Excel.Application")
+        On Error GoTo Err_btnArbeidsplan_Click
+    #Else
+        ' a reference to MS Excel <version number> Object Library must be specified
+        Dim ExApp As Excel.Application
+        Dim APlan As Excel.Worksheet
+        Set ExApp = New Excel.Application
+    #End If
+
     Set myDb = CurrentDb
    
     ' åpner kurstabell og sjekker innhold
@@ -2152,7 +2166,6 @@ On Error GoTo Err_btnArbeidsplan_Click
     AFile = APath & "\" & strNavn & "_" & rsPm!studyYear & ".xlsx"
     FileCopy TFile, AFile
     
-    Set ExApp = CreateObject("Excel.Application")
     ExApp.Workbooks.Open (AFile)
     Set APlan = ExApp.Worksheets(strSheet) ' velger første side
     'overfører data til arbeidsplanen
